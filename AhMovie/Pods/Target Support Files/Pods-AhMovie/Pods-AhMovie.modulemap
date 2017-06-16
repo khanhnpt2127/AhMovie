@@ -1,0 +1,6 @@
+framework module Pods_AhMovie {
+  umbrella header "Pods-AhMovie-umbrella.h"
+
+  export *
+  module * { export * }
+}
