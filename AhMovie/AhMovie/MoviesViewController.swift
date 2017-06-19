@@ -18,6 +18,14 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     var url: URL?
     var movies = [[String:Any]]()
     let baseUrl = "http://image.tmdb.org/t/p/w500"
+    var selectedUrl = ""
+    var selectedOverview = ""
+    var selectedtitleLabel = ""
+    var selecteddateLabel = ""
+    var selectedVote : Double = 0.0
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,9 +82,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         let desc = movies[indexPath.row]["overview"] as! String
         let imgUrl = baseUrl + (movies[indexPath.row]["poster_path"] as! String)
         
-        
-        
-        cell.MovieImageView.setImageWith(NSURL(string: imgUrl) as! URL)
+        cell.MovieImageView.setImageWith(NSURL(string: imgUrl)! as URL)
         cell.TitleLabel.text = movie
         cell.DescriptionLabel.text = desc
         return cell
@@ -84,6 +90,31 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return movies.count
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        
+        let nextViewController = segue.destination as! MovieDetailsViewController
+        
+        nextViewController.imgUrl = selectedUrl
+        nextViewController.selectedOverview = selectedOverview
+        nextViewController.selectedtitleLabel = selectedtitleLabel
+        nextViewController.selecteddateLabel = selecteddateLabel
+        nextViewController.selectedVote = selectedVote
+       
+    }
+    
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedUrl = baseUrl + (movies[indexPath.row]["poster_path"] as! String)
+        selectedOverview = movies[indexPath.row]["overview"] as! String
+        selectedtitleLabel = movies[indexPath.row]["title"] as! String
+        selecteddateLabel = movies[indexPath.row]["release_date"] as! String
+        selectedVote = movies[indexPath.row]["vote_average"] as! Double
+        performSegue(withIdentifier: "detailSegue", sender: self)
     }
     
     
