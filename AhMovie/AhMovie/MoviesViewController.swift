@@ -8,6 +8,9 @@
 
 import UIKit
 import AFNetworking
+import MBProgressHUD
+import SystemConfiguration
+import Foundation
 
 class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewDataSource {
 
@@ -32,53 +35,72 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         // Do any additional setup after loading the view, typically from a nib.
         
         url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")
+       
         
         fetchData()
         
         tableView.dataSource = self
         tableView.delegate =  self
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh!!!")
-        refreshControl.addTarget(self, action: #selector(MovieViewController.fetchMovies), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(MoviesViewController.fetchData), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
         
         searchbar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
         searchbar.placeholder = "Search"
         searchbar.showsCancelButton = true
         self.navigationItem.titleView = searchbar
+        MBProgressHUD.hide(for: self.view, animated: true)
+        
+        if isInternetAvailable() == false {
+            var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+        }
+        
+        
+        
         
     }
     
     func fetchData() {
-        if let url = url {
-            let request = URLRequest(
-                url: url,
-                cachePolicy: NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData,
-                timeoutInterval: 10)
-            let session = URLSession(
-                configuration: URLSessionConfiguration.default,
-                delegate: nil,
-                delegateQueue: OperationQueue.main)
-            let task = session.dataTask(
-                with: request,
-                completionHandler: { (dataOrNil, response, error) in
-                    if let data = dataOrNil {
-                        if let responseDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
-//                            print("response: \(responseDictionary)")
-                            if let moviesData = responseDictionary["results"] as? [[String:Any]] {
-//                                for movie in moviesData{
-//                                    if let name = movie["original_title"] as? String {
-//                                        print(name)
-//                                    }
-//                                }
-                                self.movies = moviesData
-                                self.tableView.reloadData()
+        if isInternetAvailable() {
+            if let url = url {
+                let request = URLRequest(
+                    url: url,
+                    cachePolicy: NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData,
+                    timeoutInterval: 10)
+                let session = URLSession(
+                    configuration: URLSessionConfiguration.default,
+                    delegate: nil,
+                    delegateQueue: OperationQueue.main)
+                let task = session.dataTask(
+                    with: request,
+                    completionHandler: { (dataOrNil, response, error) in
+                        if let data = dataOrNil {
+                            if let responseDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
+                                //                            print("response: \(responseDictionary)")
+                                if let moviesData = responseDictionary["results"] as? [[String:Any]] {
+                                    //                                for movie in moviesData{
+                                    //                                    if let name = movie["original_title"] as? String {
+                                    //                                        print(name)
+                                    //                                    }
+                                    //                                }
+                                    self.movies = moviesData
+                                    self.tableView.reloadData()
+                                    self.refreshControl.endRefreshing()
+                                }
                             }
                         }
-                    }
-            })
-            task.resume()
+                })
+                task.resume()
+            }
+
         }
-    }
+        else{
+            var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+            self.refreshControl.endRefreshing()
+        }
+      }
     
     
     
@@ -130,7 +152,29 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    
+    
+    func isInternetAvailable() -> Bool
+    {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+        
+        var flags = SCNetworkReachabilityFlags()
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+            return false
+        }
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        return (isReachable && !needsConnection)
+    }
 
 }
 
