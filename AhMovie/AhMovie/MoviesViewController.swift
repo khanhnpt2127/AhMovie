@@ -14,7 +14,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     
     
     @IBOutlet weak var tableView: UITableView!
-    
+    var searchbar = UISearchBar()
     var url: URL?
     var movies = [[String:Any]]()
     let baseUrl = "http://image.tmdb.org/t/p/w500"
@@ -23,7 +23,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     var selectedtitleLabel = ""
     var selecteddateLabel = ""
     var selectedVote : Double = 0.0
-    
+    var refreshControl = UIRefreshControl()
     
     
     
@@ -37,7 +37,14 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         
         tableView.dataSource = self
         tableView.delegate =  self
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh!!!")
+        refreshControl.addTarget(self, action: #selector(MovieViewController.fetchMovies), for: UIControlEvents.valueChanged)
+        tableView.addSubview(refreshControl)
         
+        searchbar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
+        searchbar.placeholder = "Search"
+        searchbar.showsCancelButton = true
+        self.navigationItem.titleView = searchbar
         
     }
     

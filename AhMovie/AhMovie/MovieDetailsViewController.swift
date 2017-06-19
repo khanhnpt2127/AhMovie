@@ -16,12 +16,13 @@ class MovieDetailsViewController: UIViewController {
     @IBOutlet weak var releasedateLable: UILabel!
     @IBOutlet weak var TitleLable: UILabel!
     @IBOutlet weak var backdropImageView: UIImageView!
-    var imgUrl = ""
+        var imgUrl = ""
     var selectedUrl = ""
     var selectedOverview = ""
     var selectedtitleLabel = ""
     var selecteddateLabel = ""
     var selectedVote : Double = 0.0
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +33,10 @@ class MovieDetailsViewController: UIViewController {
         releasedateLable.text = selecteddateLabel
         voteNumLabel.text = String(selectedVote)
         overviewLable.text = selectedOverview
+        
+       
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
