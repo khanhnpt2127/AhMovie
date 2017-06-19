@@ -11,6 +11,8 @@ import AFNetworking
 
 class MovieDetailsViewController: UIViewController {
 
+    @IBOutlet weak var infoView: UIScrollView!
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var overviewLable: UILabel!
     @IBOutlet weak var voteNumLabel: UILabel!
     @IBOutlet weak var releasedateLable: UILabel!
@@ -26,7 +28,8 @@ class MovieDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height)
+
         // Do any additional setup after loading the view.
         backdropImageView.setImageWith(NSURL(string: imgUrl)! as URL)
         TitleLable.text = selectedtitleLabel
@@ -35,8 +38,6 @@ class MovieDetailsViewController: UIViewController {
         overviewLable.text = selectedOverview
         
        
-        
-        
     }
 
     override func didReceiveMemoryWarning() {

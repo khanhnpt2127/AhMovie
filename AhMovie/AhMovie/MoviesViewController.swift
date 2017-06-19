@@ -34,9 +34,13 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        
+        
+        
         url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")
        
-        
+       
+
         fetchData()
         
         tableView.dataSource = self
@@ -58,11 +62,10 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         
         
         
-        
     }
     
     func fetchData() {
-        if isInternetAvailable() {
+       if isInternetAvailable() {
             if let url = url {
                 let request = URLRequest(
                     url: url,
@@ -93,7 +96,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
                 })
                 task.resume()
             }
-
+        
         }
         else{
             var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
