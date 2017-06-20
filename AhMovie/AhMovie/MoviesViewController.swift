@@ -37,7 +37,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+         MBProgressHUD.showAdded(to: tableView, animated: true)
         
         
         
@@ -105,7 +105,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         }
         
         
-        
+         MBProgressHUD.hide(for: self.tableViewi, animated: true)
     }
     
     func segment(sender: UISegmentedControl){
