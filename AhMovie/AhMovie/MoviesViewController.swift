@@ -12,12 +12,13 @@ import MBProgressHUD
 import SystemConfiguration
 import Foundation
 
-class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewDataSource {
+class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource {
     
     
     
     @IBOutlet weak var tableView: UITableView!
     var searchbar = UISearchBar()
+    var segmentControl = UISegmentedControl()
     var url_nowplaying: URL?
     var url_toprated: URL?
     var movies = [[String:Any]]()
@@ -30,6 +31,8 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     var refreshControl = UIRefreshControl()
     var isNowPlaying: Bool?
     
+    @IBOutlet weak var collectionView: UICollectionView!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,16 +49,56 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         
         tableView.dataSource = self
         tableView.delegate =  self
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh!!!")
         refreshControl.addTarget(self, action: #selector(MoviesViewController.fetchData), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
         
-        searchbar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
-        searchbar.placeholder = "Search"
-        searchbar.showsCancelButton = true
-        self.navigationItem.titleView = searchbar
-        MBProgressHUD.hide(for: self.view, animated: true)
         
+        
+        //TODO: Segment
+        segmentControl.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+        
+        
+        segmentControl.insertSegment(with: UIImage(named: "list_view"), at: 0, animated: true)
+        
+        segmentControl.insertSegment(with: UIImage(named: "grid_view"), at: 1, animated: true)
+        
+        segmentControl.backgroundColor = UIColor.white
+        
+        segmentControl.selectedSegmentIndex = 0
+        
+        segmentControl.addTarget(self, action: #selector(MoviesViewController.segment(sender:)), for: UIControlEvents.valueChanged )
+
+        let rightBut = UIBarButtonItem()
+        rightBut.customView = segmentControl
+        self.navigationItem.rightBarButtonItem = rightBut
+        
+        
+        collectionView.isHidden = true
+        
+        
+//
+//        let rightbut = UIBarButtonItem()
+//        rightbut.customView = segmentControl
+//        
+//        
+//        self.navigationItem.rightBarButtonItem = rightbut
+        
+        
+        //TODO: Search bar
+//        searchbar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
+//        searchbar.placeholder = "Search"
+//        searchbar.showsCancelButton = true
+//        self.navigationItem.titleView = searchbar
+//        MBProgressHUD.hide(for: self.view, animated: true)
+//        
+        
+        
+        //TODO: Don't need it ---> remove later
         if isInternetAvailable() == false {
             var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
             alert.show()
@@ -63,6 +106,16 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         
         
         
+    }
+    
+    func segment(sender: UISegmentedControl){
+        if sender.selectedSegmentIndex == 0 {
+            tableView.isHidden = false
+            collectionView.isHidden = true
+        } else {
+            tableView.isHidden = true
+            collectionView.isHidden = false
+        }
     }
     
     func fetchData() {
@@ -95,6 +148,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
                                     //                                }
                                     self.movies = moviesData
                                     self.tableView.reloadData()
+                                    self.collectionView.reloadData()
                                     self.refreshControl.endRefreshing()
                                 }
                             }
@@ -110,6 +164,25 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
             self.refreshControl.endRefreshing()
         }
     }
+    
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return movies.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com.tk.MovieCollectionCell", for: indexPath) as! MoviesCollectionViewCell
+        
+        let imgUrl = baseUrl + (movies[indexPath.row]["poster_path"] as! String)
+        cell.PosterImage.setImageWith(NSURL(string: imgUrl)! as URL)
+        
+        
+        return cell
+    }
+    
+    
     
     
     
@@ -144,7 +217,14 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedUrl = baseUrl + (movies[indexPath.row]["poster_path"] as! String)
+        selectedOverview = movies[indexPath.row]["overview"] as! String
+        selectedtitleLabel = movies[indexPath.row]["title"] as! String
+        selecteddateLabel = movies[indexPath.row]["release_date"] as! String
+        selectedVote = movies[indexPath.row]["vote_average"] as! Double
+        performSegue(withIdentifier: "detailSegue", sender: self)
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedUrl = baseUrl + (movies[indexPath.row]["poster_path"] as! String)
