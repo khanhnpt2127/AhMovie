@@ -2,7 +2,7 @@
 
 AhMovie is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: 0 hours spent in total
+Time spent: 6.5 hours spent in total
 
 ## User Stories
 
