@@ -105,7 +105,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         }
         
         
-         MBProgressHUD.hide(for: self.tableViewi, animated: true)
+         MBProgressHUD.hide(for: self.tableView, animated: true)
     }
     
     func segment(sender: UISegmentedControl){
