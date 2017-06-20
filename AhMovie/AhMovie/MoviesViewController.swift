@@ -13,12 +13,13 @@ import SystemConfiguration
 import Foundation
 
 class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewDataSource {
-
+    
     
     
     @IBOutlet weak var tableView: UITableView!
     var searchbar = UISearchBar()
-    var url: URL?
+    var url_nowplaying: URL?
+    var url_toprated: URL?
     var movies = [[String:Any]]()
     let baseUrl = "http://image.tmdb.org/t/p/w500"
     var selectedUrl = ""
@@ -27,7 +28,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     var selecteddateLabel = ""
     var selectedVote : Double = 0.0
     var refreshControl = UIRefreshControl()
-    
+    var isNowPlaying: Bool?
     
     
     override func viewDidLoad() {
@@ -37,10 +38,10 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         
         
         
-        url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")
-       
-       
-
+        url_nowplaying = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")
+        
+        url_toprated = URL(string: "https://api.themoviedb.org/3/movie/top_rated?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")
+        
         fetchData()
         
         tableView.dataSource = self
@@ -65,8 +66,13 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     }
     
     func fetchData() {
-       if isInternetAvailable() {
-            if let url = url {
+        if isInternetAvailable() {
+            var url_endpoint = url_toprated
+            if isNowPlaying == true {
+                url_endpoint = url_nowplaying
+            }
+            
+            if let url = url_endpoint {
                 let request = URLRequest(
                     url: url,
                     cachePolicy: NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData,
@@ -96,14 +102,14 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
                 })
                 task.resume()
             }
-        
+            
         }
         else{
             var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
             alert.show()
             self.refreshControl.endRefreshing()
         }
-      }
+    }
     
     
     
@@ -135,7 +141,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         nextViewController.selectedtitleLabel = selectedtitleLabel
         nextViewController.selecteddateLabel = selecteddateLabel
         nextViewController.selectedVote = selectedVote
-       
+        
     }
     
     
@@ -150,7 +156,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
     }
     
     
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -178,7 +184,7 @@ class MoviesViewController: UIViewController,  UITableViewDelegate, UITableViewD
         let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
         return (isReachable && !needsConnection)
     }
-
+    
 }
 
 

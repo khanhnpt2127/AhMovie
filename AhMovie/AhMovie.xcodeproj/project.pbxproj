@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1056F96F90A5DD95C189FEDA /* Pods_AhMovie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 236A2C4C55303CF9A48E98CB /* Pods_AhMovie.framework */; };
+		520C3C991EF7EB36003B53C8 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520C3C981EF7EB36003B53C8 /* SettingsViewController.swift */; };
 		52125DAB1EF3DB44002B62D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52125DAA1EF3DB44002B62D9 /* AppDelegate.swift */; };
 		52125DAD1EF3DB44002B62D9 /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52125DAC1EF3DB44002B62D9 /* MoviesViewController.swift */; };
 		52125DB01EF3DB44002B62D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52125DAE1EF3DB44002B62D9 /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		236A2C4C55303CF9A48E98CB /* Pods_AhMovie.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AhMovie.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BA621D64014666005A0392A /* Pods-AhMovie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AhMovie.release.xcconfig"; path = "Pods/Target Support Files/Pods-AhMovie/Pods-AhMovie.release.xcconfig"; sourceTree = "<group>"; };
+		520C3C981EF7EB36003B53C8 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		52125DA71EF3DB44002B62D9 /* AhMovie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AhMovie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52125DAA1EF3DB44002B62D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52125DAC1EF3DB44002B62D9 /* MoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				52125DB31EF3DB44002B62D9 /* LaunchScreen.storyboard */,
 				52125DB61EF3DB44002B62D9 /* Info.plist */,
 				523C0EDB1EF794070057DEBC /* MovieTableViewCell.swift */,
+				520C3C981EF7EB36003B53C8 /* SettingsViewController.swift */,
 			);
 			path = AhMovie;
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 				523C0EDE1EF7A3EA0057DEBC /* MovieDetailsViewController.swift in Sources */,
 				52125DAD1EF3DB44002B62D9 /* MoviesViewController.swift in Sources */,
 				52125DAB1EF3DB44002B62D9 /* AppDelegate.swift in Sources */,
+				520C3C991EF7EB36003B53C8 /* SettingsViewController.swift in Sources */,
 				523C0EDC1EF794070057DEBC /* MovieTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
